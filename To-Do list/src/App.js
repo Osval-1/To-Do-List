@@ -4,50 +4,53 @@ import SingleListItem from "./SingleListItem";
 function App() {
   const [listItems, setListItems] = useState([]);
   const [currentItem, SetCurrentItem] = useState("");
-  const [editID, setEditID] = useState("");
+  const [editID, setEditID] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const handleChange = (e) => {
     SetCurrentItem(e.target.value);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(isEditing && currentItem){
-      setListItems(listItems.map(listItem=>{
-        if(listItem.id === editID){
-          return {...listItem,item:currentItem}
-        }
-      }))
+    if (isEditing && currentItem) {
+      setListItems(
+        listItems.map((listItem) => {
+          if (listItem.id === editID) {
+            return { ...listItem, item: currentItem };
+          }
+          return listItem
+        })
+      );
+      setEditID(null)
       setIsEditing(false);
-    }
-    else if (currentItem ) {
+    } else if (currentItem) {
       setListItems([
         ...listItems,
-        { id: new Date().toString(), item: currentItem },
+        { id: new Date().getTime().toString(), item: currentItem },
       ]);
     }
     SetCurrentItem("");
   };
   const clearItem = () => {
-    SetCurrentItem('')
-    setIsEditing(false)
+    SetCurrentItem("");
+    setIsEditing(false);
     setListItems([]);
   };
   const deleteItem = (id) => {
     const newList = listItems.filter((item) => item.id !== id);
     setListItems(newList);
-    setIsEditing(false)
-    SetCurrentItem('')
+    setIsEditing(false);
+    SetCurrentItem("");
   };
   const editItem = (id) => {
-    if(isEditing){
-     setIsEditing(false)
-     SetCurrentItem('')
-     return
+    if (isEditing) {
+      setIsEditing(false);
+      SetCurrentItem("");
+      return;
     }
-    setEditID(id)
-    setIsEditing(!isEditing)
+    setEditID(id);
+    setIsEditing(!isEditing);
     const newCurrentItem = listItems.filter((item) => item.id === id);
-    SetCurrentItem(newCurrentItem[0].item)
+    SetCurrentItem(newCurrentItem[0].item);
   };
   return (
     <main>
@@ -63,8 +66,7 @@ function App() {
                 onChange={handleChange}
               />
               <button className="btn btn-primary" onClick={handleSubmit}>
-                {isEditing?'Edit'
-                :'add'}
+                {isEditing ? "Edit" : "add"}
               </button>
             </div>
             <hr />
